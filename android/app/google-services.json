@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "320903346377",
+    "project_id": "generalms-b6a03",
+    "storage_bucket": "generalms-b6a03.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320903346377:android:6f1cc44173370072933518",
+        "android_client_info": {
+          "package_name": "com.example.generalms"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBL9znKRnYG1ahuaKcyIiuwc-bdXxKH_pI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
