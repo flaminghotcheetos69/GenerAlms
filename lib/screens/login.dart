@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'homepage.dart';
 import 'registration.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: const ColorScheme( 
+        colorScheme: const ColorScheme(
           brightness: Brightness.light,
           primary: Color(0xFFD33333),
           secondary: Color(0xFFF63B3B),
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
       routes: {
-        '/login': (context) => MyApp(), // Replace MyApp() with your login page widget
+        '/login': (context) => MyApp(),
       },
     );
   }
@@ -110,14 +111,17 @@ class MyHomePage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   try {
-                    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    UserCredential userCredential =
+                        await FirebaseAuth.instance.signInWithEmailAndPassword(
                       email: emailController.text,
                       password: passwordController.text,
                     );
 
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => HomePage(user: userCredential.user!)),
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              HomePage(user: userCredential.user!)),
                     );
 
                     print("User logged in: ${userCredential.user!.uid}");
