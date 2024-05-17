@@ -4,7 +4,7 @@ import 'package:generalms/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'homepage.dart';
-import 'registration_page.dart';
+import 'registration.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
