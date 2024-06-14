@@ -3,8 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:generalms/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:generalms/screens/settings.dart';
 import 'homepage.dart';
 import 'registration.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -18,71 +20,85 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'GenerAlms',
       theme: ThemeData(
-        colorScheme: const ColorScheme( 
+        colorScheme: const ColorScheme(
           brightness: Brightness.light,
           primary: Color(0xFFD33333),
           secondary: Color(0xFFF63B3B),
           background: Color(0xFFE8E8E8),
           surface: Color(0xFFFFFFFF),
-          onBackground: Color(0xFFF63B3B),
-          onSurface: Color(0xFFF63B3B),
+          onBackground: Color(0xFF000000),
+          onSurface: Color(0xFF000000),
           onError: Colors.black,
-          onPrimary: Colors.black,
-          onSecondary: Colors.black,
+          onPrimary: Colors.white,
+          onSecondary: Colors.white,
           error: Colors.red,
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(),
+      home: LoginPage(),
       routes: {
-        '/login': (context) => MyApp(), // Replace MyApp() with your login page widget
+        '/login': (context) => LoginPage(),
+        '/settings': (context) => SettingsPage(),
       },
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _rememberMe = false;
+  String? _errorMessage;
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Image.asset('assets/GenerAlmsLogoTransparent.png'),
-              const SizedBox(height: 16.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: TextField(
-                  controller: emailController,
-                  decoration: const InputDecoration(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 40.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset('assets/GenerAlmsLogoTransparent.png'),
+                const SizedBox(height: 24.0),
+                TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
                     labelText: 'E-mail',
+                    border: OutlineInputBorder(),
                   ),
                 ),
-              ),
-              const SizedBox(height: 16.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: TextField(
-                  controller: passwordController,
-                  decoration: const InputDecoration(
+                const SizedBox(height: 16.0),
+                TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
                     labelText: 'Password',
+                    border: OutlineInputBorder(),
                   ),
                   obscureText: true,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: Row(
+                const SizedBox(height: 8.0),
+                if (_errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ),
+                const SizedBox(height: 8.0),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     TextButton(
@@ -94,50 +110,60 @@ class MyHomePage extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         Checkbox(
-                          value: false,
+                          value: _rememberMe,
                           onChanged: (bool? value) {
-                            // Add your "Remember Me" logic here
+                            setState(() {
+                              _rememberMe = value ?? false;
+                            });
                           },
                         ),
-                        const SizedBox(width: 4.0),
                         const Text('Remember Me'),
                       ],
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () async {
-                  try {
-                    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-                      email: emailController.text,
-                      password: passwordController.text,
-                    );
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      );
 
-                    Navigator.pushReplacement(
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage(user: userCredential.user!)),
+                      );
+
+                      print("User logged in: ${userCredential.user!.uid}");
+                    } catch (e) {
+                      setState(() {
+                        _errorMessage = "Invalid credentials. Please try again.";
+                      });
+                      print("Error: $e");
+                    }
+                  },
+                  child: const Text('Login'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFD33333),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                    textStyle: const TextStyle(fontSize: 16.0),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => HomePage(user: userCredential.user!)),
+                      MaterialPageRoute(builder: (context) => const RegistrationPage()),
                     );
-
-                    print("User logged in: ${userCredential.user!.uid}");
-                  } catch (e) {
-                    print("Error: $e");
-                  }
-                },
-                child: const Text('Login'),
-              ),
-              const SizedBox(height: 16.0),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegistrationPage()),
-                  );
-                },
-                child: const Text('Register'),
-              ),
-            ],
+                  },
+                  child: const Text('Register'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
