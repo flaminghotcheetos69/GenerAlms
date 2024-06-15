@@ -6,6 +6,8 @@ import 'notifications.dart';
 import 'profile.dart';
 import 'chat.dart';
 import 'listing_details.dart';
+import 'add_donation_product_page.dart';
+import 'donation_history.dart';
 
 class HomePage extends StatefulWidget {
   final User user;
@@ -71,7 +73,12 @@ class _HomePageState extends State<HomePage> {
                 FloatingActionButton(
                   heroTag: 'createListing',
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => PlaceholderPage(title: 'Create Listing')));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddDonationProductPage(user: widget.user),
+                      ),
+                    );
                   },
                   child: Icon(Icons.add),
                   backgroundColor: Colors.red,
@@ -80,7 +87,12 @@ class _HomePageState extends State<HomePage> {
                 FloatingActionButton(
                   heroTag: 'currentListings',
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => PlaceholderPage(title: 'Current Listings')));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DonationHistoryPage(user: widget.user),
+                      ),
+                    );
                   },
                   child: Icon(Icons.history),
                   backgroundColor: Colors.red,
@@ -288,24 +300,6 @@ class ListingsPage extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class PlaceholderPage extends StatelessWidget {
-  final String title;
-
-  const PlaceholderPage({Key? key, required this.title}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: Center(
-        child: Text('$title page content'),
-      ),
     );
   }
 }
