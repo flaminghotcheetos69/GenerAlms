@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -11,90 +9,107 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  File? _profileImage;
-  String? _profileImageUrl;
-  User? _currentUser;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  User? _user;
+  Map<String, dynamic>? _userData;
 
   @override
   void initState() {
     super.initState();
-    _currentUser = FirebaseAuth.instance.currentUser;
-    _loadProfileImage();
+    _user = _auth.currentUser;
+    _fetchUserData();
   }
 
-  Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      _profileImage = File(pickedFile.path);
-      await _uploadProfileImage();
+  void _fetchUserData() async {
+    if (_user != null) {
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(_user!.uid).get();
+      setState(() {
+        _userData = userDoc.data() as Map<String, dynamic>?;
+      });
     }
   }
 
-  Future<void> _uploadProfileImage() async {
-    if (_profileImage == null || _currentUser == null) return;
-    final storageRef = FirebaseStorage.instance
-        .ref()
-        .child('profile_images')
-        .child(_currentUser!.uid + '.jpg');
-    await storageRef.putFile(_profileImage!);
-    String downloadUrl = await storageRef.getDownloadURL();
-    await FirebaseFirestore.instance.collection('users').doc(_currentUser!.uid).update({
-      'profileImageUrl': downloadUrl,
-    });
-    setState(() {
-      _profileImageUrl = downloadUrl;
-    });
-  }
-
-  Future<void> _loadProfileImage() async {
-    if (_currentUser == null) return;
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(_currentUser!.uid).get();
-    setState(() {
-      _profileImageUrl = userDoc['profileImageUrl'];
-    });
+  void _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      // Upload the image to Firebase Storage and update user profile picture URL
+      // For simplicity, we are just updating the local state here
+      setState(() {
+        _userData!['profileImageUrl'] = image.path;
+      });
+      // Save the updated URL to Firestore
+      _firestore
+          .collection('users')
+          .doc(_user!.uid)
+          .update({'profileImageUrl': image.path});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_userData == null) {
+      return Center(child: CircularProgressIndicator());
+    }
+
     return Scaffold(
-      
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            GestureDetector(
-              onTap: _pickImage,
-              child: CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.grey[200],
-                backgroundImage: _profileImageUrl != null ? NetworkImage(_profileImageUrl!) : null,
-                child: _profileImageUrl == null ? const Icon(Icons.camera_alt, size: 50, color: Colors.grey) : null,
-              ),
+            Stack(
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: _userData!['profileImageUrl'] != null
+                      ? NetworkImage(_userData!['profileImageUrl'])
+                      : null,
+                  child: _userData!['profileImageUrl'] == null
+                      ? Icon(Icons.person, size: 50)
+                      : null,
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: _pickImage,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16.0),
-            const Text(
-              'Edit Profile',
+            SizedBox(height: 10),
+            Text(
+              _userData!['fullName'] ?? 'User Name',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 24.0),
-            _buildProfileOption('Recipient account verification', Icons.verified_user),
-            _buildProfileOption('Privacy and security', Icons.security),
-            _buildProfileOption('Location preferences', Icons.location_on),
-            _buildProfileOption('Donee history', Icons.history),
+            SizedBox(height: 20),
+            ListTile(
+              leading: Icon(Icons.verified_user),
+              title: Text('Recipient account verification'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.lock),
+              title: Text('Privacy and security'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.location_on),
+              title: Text('Location preferences'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.history),
+              title: Text('Donee history'),
+              onTap: () {},
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildProfileOption(String title, IconData icon) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.grey[600]),
-      title: Text(title, style: TextStyle(fontSize: 16)),
-      trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey[600]),
-      onTap: () {
-        // Navigate to respective pages
-      },
     );
   }
 }
