@@ -86,7 +86,7 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
                 child: Container(
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: isSentByCurrentUser ? Colors.blue : Colors.grey,
+                    color: isSentByCurrentUser ? const Color(0xFFEF4136) : Colors.grey,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(message['message']),

@@ -18,6 +18,22 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  bool _isDonator = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUserType();
+  }
+
+  Future<void> _checkUserType() async {
+    var userDoc = await FirebaseFirestore.instance.collection('users').doc(widget.user.uid).get();
+    if (userDoc.exists) {
+      setState(() {
+        _isDonator = userDoc['userType'] == 'Donator';
+      });
+    }
+  }
 
   final List<Widget> _pages = [
     ListingsPage(),
@@ -48,6 +64,30 @@ class _HomePageState extends State<HomePage> {
         title: Text(_titles[_selectedIndex]),
       ),
       body: _pages[_selectedIndex],
+      floatingActionButton: _selectedIndex == 0 && _isDonator
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  heroTag: 'createListing',
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => PlaceholderPage(title: 'Create Listing')));
+                  },
+                  child: Icon(Icons.add),
+                  backgroundColor: Colors.red,
+                ),
+                SizedBox(height: 10),
+                FloatingActionButton(
+                  heroTag: 'currentListings',
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => PlaceholderPage(title: 'Current Listings')));
+                  },
+                  child: Icon(Icons.history),
+                  backgroundColor: Colors.red,
+                ),
+              ],
+            )
+          : null,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -248,6 +288,24 @@ class ListingsPage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class PlaceholderPage extends StatelessWidget {
+  final String title;
+
+  const PlaceholderPage({Key? key, required this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      body: Center(
+        child: Text('$title page content'),
+      ),
     );
   }
 }

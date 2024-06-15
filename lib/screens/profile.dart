@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
+import 'account_verification.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -23,8 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _fetchUserData() async {
     if (_user != null) {
-      DocumentSnapshot userDoc =
-          await _firestore.collection('users').doc(_user!.uid).get();
+      DocumentSnapshot userDoc = await _firestore.collection('users').doc(_user!.uid).get();
       setState(() {
         _userData = userDoc.data() as Map<String, dynamic>?;
       });
@@ -35,16 +35,10 @@ class _ProfilePageState extends State<ProfilePage> {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      // Upload the image to Firebase Storage and update user profile picture URL
-      // For simplicity, we are just updating the local state here
       setState(() {
         _userData!['profileImageUrl'] = image.path;
       });
-      // Save the updated URL to Firestore
-      _firestore
-          .collection('users')
-          .doc(_user!.uid)
-          .update({'profileImageUrl': image.path});
+      _firestore.collection('users').doc(_user!.uid).update({'profileImageUrl': image.path});
     }
   }
 
@@ -55,7 +49,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
 
     return Scaffold(
-
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -89,8 +82,15 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(height: 20),
             ListTile(
               leading: Icon(Icons.verified_user),
-              title: Text('Recipient account verification'),
-              onTap: () {},
+              title: Text(_userData!['userType'] == 'Donator'
+                  ? 'Donator account verification'
+                  : 'Recipient account verification'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AccountVerificationPage()),
+                );
+              },
             ),
             ListTile(
               leading: Icon(Icons.lock),
