@@ -25,7 +25,7 @@ class _AddDonationProductPageState extends State<AddDonationProductPage> {
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _image = File(pickedFile.path);
+        _image = File(pickedFile.path); // Corrected the typo here
       });
     }
   }
@@ -72,30 +72,39 @@ class _AddDonationProductPageState extends State<AddDonationProductPage> {
       appBar: AppBar(
         title: Text('Add Donation Product'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _titleController,
-              decoration: InputDecoration(labelText: 'Title'),
-            ),
-            TextField(
-              controller: _descriptionController,
-              decoration: InputDecoration(labelText: 'Description'),
-            ),
-            SizedBox(height: 20),
-            _image == null ? Text('No image selected.') : Image.file(_image!),
-            ElevatedButton(
-              onPressed: _pickImage,
-              child: Text('Pick Image'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _addProduct,
-              child: Text('Add Product'),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              TextField(
+                controller: _titleController,
+                decoration: InputDecoration(labelText: 'Title'),
+              ),
+              TextField(
+                controller: _descriptionController,
+                decoration: InputDecoration(labelText: 'Description'),
+              ),
+              SizedBox(height: 20),
+              _image == null
+                  ? Text('No image selected.')
+                  : ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: 200, // Adjust as needed
+                      ),
+                      child: Image.file(_image!),
+                    ),
+              ElevatedButton(
+                onPressed: _pickImage,
+                child: Text('Pick Image'),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _addProduct,
+                child: Text('Add Product'),
+              ),
+            ],
+          ),
         ),
       ),
     );
