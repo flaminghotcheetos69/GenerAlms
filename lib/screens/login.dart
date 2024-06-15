@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:generalms/firebase_options.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'homepage.dart';
 import 'registration.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-
+  await Firebase.initializeApp( options: DefaultFirebaseOptions.currentPlatform,);
   runApp(const MyApp());
 }
 
@@ -24,9 +22,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
           primary: Color(0xFFD33333),
           secondary: Color(0xFFF63B3B),
-          background: Color(0xFFE8E8E8),
           surface: Color(0xFFFFFFFF),
-          onBackground: Color(0xFFF63B3B),
           onSurface: Color(0xFFF63B3B),
           onError: Colors.black,
           onPrimary: Colors.black,
