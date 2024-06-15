@@ -6,10 +6,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:generalms/screens/settings.dart';
 import 'homepage.dart';
 import 'registration.dart';
+import 'adminHP.dart'; // Import your admin home page
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(const MyApp());
 }
@@ -37,9 +40,9 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: const LoginPage(),
       routes: {
-        '/login': (context) => LoginPage(),
+        '/login': (context) => const LoginPage(),
         '/settings': (context) => SettingsPage(),
       },
     );
@@ -59,6 +62,12 @@ class _LoginPageState extends State<LoginPage> {
   bool _rememberMe = false;
   String? _errorMessage;
 
+  Future<String?> getUserType(String userId) async {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
+    return userData?['userType'] as String?;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 24.0),
                 TextField(
                   controller: _emailController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'E-mail',
                     border: OutlineInputBorder(),
                   ),
@@ -82,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 16.0),
                 TextField(
                   controller: _passwordController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Password',
                     border: OutlineInputBorder(),
                   ),
@@ -131,10 +140,18 @@ class _LoginPageState extends State<LoginPage> {
                         password: _passwordController.text,
                       );
 
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomePage(user: userCredential.user!)),
-                      );
+                      String? userType = await getUserType(userCredential.user!.uid);
+                      if (userType == 'Admin') {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => AdminDashboardPage()), // Using AdminDashboardPage
+                        );
+                      } else {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage(user: userCredential.user!)),
+                        );
+                      }
 
                       print("User logged in: ${userCredential.user!.uid}");
                     } catch (e) {
