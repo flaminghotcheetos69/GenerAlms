@@ -1,51 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:generalms/firebase_options.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'homepage.dart';
-import 'registration.dart';
+import 'homepage.dart'; // Assuming HomePage is defined in homepage.dart
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: const ColorScheme(
-          brightness: Brightness.light,
-          primary: Color(0xFFD33333),
-          secondary: Color(0xFFF63B3B),
-          background: Color(0xFFE8E8E8),
-          surface: Color(0xFFFFFFFF),
-          onBackground: Color(0xFFF63B3B),
-          onSurface: Color(0xFFF63B3B),
-          onError: Colors.black,
-          onPrimary: Colors.black,
-          onSecondary: Colors.black,
-          error: Colors.red,
-        ),
-      ),
-      debugShowCheckedModeBanner: false,
-      home: const MyHomePage(),
-      routes: {
-        '/login': (context) => MyApp(),
-      },
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -120,13 +78,21 @@ class MyHomePage extends StatelessWidget {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              HomePage(user: userCredential.user!)),
+                        builder: (context) =>
+                            HomePage(user: userCredential.user!),
+                      ),
                     );
 
                     print("User logged in: ${userCredential.user!.uid}");
                   } catch (e) {
-                    print("Error: $e");
+                    print("Login Error: $e"); // Print error for debugging
+                    // Optionally show a dialog or snackbar with the error message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Login failed: $e"),
+                        duration: const Duration(seconds: 5),
+                      ),
+                    );
                   }
                 },
                 child: const Text('Login'),
@@ -134,10 +100,7 @@ class MyHomePage extends StatelessWidget {
               const SizedBox(height: 16.0),
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegistrationPage()),
-                  );
+                  // Navigate to registration page or handle registration logic
                 },
                 child: const Text('Register'),
               ),

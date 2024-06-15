@@ -1,6 +1,13 @@
 # This file controls Flutter-level build steps. It should not be edited.
 cmake_minimum_required(VERSION 3.14)
 
+# Ensure compatibility with CMake 3.5 or higher
+cmake_minimum_required(VERSION 3.5...3.22)
+
+if(CMAKE_VERSION VERSION_LESS "3.5")
+  message(FATAL_ERROR "CMake version 3.5 or higher is required. Please update CMake.")
+endif()
+
 set(EPHEMERAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ephemeral")
 
 # Configuration provided via flutter tool.

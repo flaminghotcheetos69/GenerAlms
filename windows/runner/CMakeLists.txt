@@ -1,4 +1,9 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.5...3.22)
+
+if(CMAKE_VERSION VERSION_LESS "3.5")
+  message(FATAL_ERROR "CMake version 3.5 or higher is required. Please update CMake.")
+endif()
+
 project(runner LANGUAGES CXX)
 
 # Define the application target. To change its name, change BINARY_NAME in the
