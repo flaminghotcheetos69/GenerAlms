@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:generalms/screens/adminhplist.dart';
 import 'admin_verification.dart';
 import 'admin_roles_perm.dart';
 import 'admin_password_policies.dart';
 
-class AdminSettingsScreen extends StatelessWidget {
-  const AdminSettingsScreen({super.key});
+class AdminToolsScreen extends StatelessWidget {
+  const AdminToolsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,11 @@ class AdminSettingsScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+              (route) => false, 
+            );
           },
         ),
       ),
@@ -26,7 +31,7 @@ class AdminSettingsScreen extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => VerificationScreen()),
+                MaterialPageRoute(builder: (context) => UserVerificationScreen()),
               );
             },
           ),
@@ -44,7 +49,7 @@ class AdminSettingsScreen extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PasswordPolicies()),
+                MaterialPageRoute(builder: (context) => UserPasswordPolicies()),
               );
             },
           ),

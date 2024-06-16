@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'adminhplist.dart';
+import 'package:generalms/screens/admin_user_settings.dart';
 
-class VerificationScreen extends StatefulWidget {
+class UserVerificationScreen extends StatefulWidget {
   @override
-  _VerificationScreenState createState() => _VerificationScreenState();
+  UserVerificationScreenState createState() => UserVerificationScreenState();
 }
 
-class _VerificationScreenState extends State<VerificationScreen> {
+class UserVerificationScreenState extends State<UserVerificationScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Map<String, bool> _verifiedStatus = {};
 
@@ -61,7 +61,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => AdminToolsScreen()),
             );
           },
         ),

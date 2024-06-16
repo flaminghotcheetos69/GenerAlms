@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserCommunicationSettingsScreen extends StatefulWidget {
-  const UserCommunicationSettingsScreen({super.key});
+class AdminEmailScreen extends StatefulWidget {
+  const AdminEmailScreen({super.key});
 
   @override
-  _UserCommunicationSettingsScreenState createState() => _UserCommunicationSettingsScreenState();
+  _AdminEmailScreenState createState() => _AdminEmailScreenState();
 }
 
-class _UserCommunicationSettingsScreenState extends State<UserCommunicationSettingsScreen> {
+class _AdminEmailScreenState extends State<AdminEmailScreen> {
   final List<String> _selectedUsers = [];
   String? _selectedEmail;
   List<Map<String, dynamic>> _emailDrafts = [];

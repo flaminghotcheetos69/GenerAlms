@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:generalms/screens/admin_user_comm.dart';
 import 'admin_email_nf.dart'; 
 
-class AdminCommsScreen extends StatelessWidget {
-  const AdminCommsScreen({super.key});
+class AdminCommHubsScreen extends StatelessWidget {
+  const AdminCommHubsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class AdminCommsScreen extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const EmailNotificationSettingsScreen()),
+                MaterialPageRoute(builder: (context) => const EmailNotificationScreen()),
               );
             },
           ),
@@ -34,7 +34,7 @@ class AdminCommsScreen extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const UserCommunicationSettingsScreen()),
+                MaterialPageRoute(builder: (context) => const AdminEmailScreen()),
               );
             },
           ),

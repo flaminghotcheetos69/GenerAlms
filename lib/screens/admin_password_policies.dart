@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'admin_user_settings.dart'; 
 
-class PasswordPolicies extends StatelessWidget {
-  const PasswordPolicies({super.key});
+class UserPasswordPolicies extends StatelessWidget {
+  const UserPasswordPolicies({super.key});
   
    @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class PasswordPolicies extends StatelessWidget {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const AdminSettingsScreen()),
+              MaterialPageRoute(builder: (context) => const AdminToolsScreen()),
             );
           },
         ),

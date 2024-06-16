@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class EmailNotificationSettingsScreen extends StatefulWidget {
-  const EmailNotificationSettingsScreen({super.key});
+class EmailNotificationScreen extends StatefulWidget {
+  const EmailNotificationScreen({super.key});
 
   @override
-  _EmailNotificationSettingsScreenState createState() => _EmailNotificationSettingsScreenState();
+  _EmailNotificationScreenState createState() => _EmailNotificationScreenState();
 }
 
-class _EmailNotificationSettingsScreenState extends State<EmailNotificationSettingsScreen> {
+class _EmailNotificationScreenState extends State<EmailNotificationScreen> {
   final TextEditingController _emailContentController = TextEditingController();
 
   Future<void> _saveDraft() async {

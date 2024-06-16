@@ -6,8 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:generalms/screens/settings.dart';
 import 'homepage.dart';
 import 'registration.dart';
-import 'adminHP.dart'; // Import your admin home page
-
+import 'adminHP.dart'; 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -144,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                       if (userType == 'Admin') {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => AdminDashboardPage()), // Using AdminDashboardPage
+                          MaterialPageRoute(builder: (context) => AdminDBScreen()), // Using AdminDBScreen
                         );
                       } else {
                         Navigator.pushReplacement(

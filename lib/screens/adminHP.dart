@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:generalms/screens/login.dart';
 import 'adminhplist.dart';
 
-class AdminDashboardPage extends StatelessWidget {
-  const AdminDashboardPage({Key? key}) : super(key: key);
+class AdminDBScreen extends StatelessWidget {
+  const AdminDBScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +17,18 @@ class AdminDashboardPage extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
+       actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => MyApp()),
+                (route) => false, 
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

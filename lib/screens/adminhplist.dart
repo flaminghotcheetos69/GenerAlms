@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const AdminSettingsScreen()),
+                MaterialPageRoute(builder: (context) => const AdminToolsScreen()),
               );
             },
           ),
@@ -35,18 +35,9 @@ class HomePage extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const AdminCommsScreen()),
+                MaterialPageRoute(builder: (context) => const AdminCommHubsScreen()),
               );
             },
-          ),
-          ListTile(
-            title: Text('Security and Privacy Settings'),
-          ),
-          ListTile(
-            title: Text('Report and Analysis Setting'),
-          ),
-          ListTile(
-            title: Text('Backup and Recovery Settings'),
           ),
          ],
       ),
@@ -69,7 +60,7 @@ class HomePage extends StatelessWidget {
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const AdminDashboardPage()),
+                MaterialPageRoute(builder: (context) => const AdminDBScreen()),
               );
               break;
           }
