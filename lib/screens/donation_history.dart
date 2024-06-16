@@ -15,8 +15,8 @@ class DonationHistoryPage extends StatelessWidget {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('donations')
-            .where('userId', isEqualTo: user.uid)
+            .collection('itemListings')
+            .where('user', isEqualTo: user.email)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -39,8 +39,12 @@ class DonationHistoryPage extends StatelessWidget {
               var donation = donations[index].data() as Map<String, dynamic>;
               return Card(
                 child: ListTile(
-                  leading: Image.network(donation['imageUrl']),
+                  leading: donation['imageUrl'] != null
+                      ? Image.network(donation['imageUrl'])
+                      : Icon(Icons.image_not_supported),
                   title: Text(donation['title']),
+                  subtitle: Text(donation['description']),
+                  trailing: Text('Rating: ${donation['rating']}'),
                 ),
               );
             },
