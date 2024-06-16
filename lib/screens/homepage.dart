@@ -29,7 +29,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _checkUserType() async {
-    var userDoc = await FirebaseFirestore.instance.collection('users').doc(widget.user.uid).get();
+    var userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.user.uid)
+        .get();
     if (userDoc.exists) {
       setState(() {
         _isDonator = userDoc['userType'] == 'Donator';
@@ -76,7 +79,8 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AddDonationProductPage(user: widget.user),
+                        builder: (context) =>
+                            AddDonationProductPage(user: widget.user),
                       ),
                     );
                   },
@@ -90,7 +94,8 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DonationHistoryPage(user: widget.user),
+                        builder: (context) =>
+                            DonationHistoryPage(user: widget.user),
                       ),
                     );
                   },
@@ -157,7 +162,8 @@ class _HomePageState extends State<HomePage> {
 
 class ListingsPage extends StatelessWidget {
   Future<Map<String, dynamic>> getUserInfo(String userId) async {
-    var userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    var userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
     return userDoc.data() as Map<String, dynamic>;
   }
 
@@ -183,7 +189,9 @@ class ListingsPage extends StatelessWidget {
         ),
         Expanded(
           child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection('itemListings').snapshots(),
+            stream: FirebaseFirestore.instance
+                .collection('itemListings')
+                .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -203,12 +211,14 @@ class ListingsPage extends StatelessWidget {
                   return FutureBuilder<Map<String, dynamic>>(
                     future: getUserInfo(item['userId']),
                     builder: (context, userSnapshot) {
-                      if (userSnapshot.connectionState == ConnectionState.waiting) {
+                      if (userSnapshot.connectionState ==
+                          ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
                       }
 
                       if (userSnapshot.hasError) {
-                        return Center(child: Text('Error: ${userSnapshot.error}'));
+                        return Center(
+                            child: Text('Error: ${userSnapshot.error}'));
                       }
 
                       var user = userSnapshot.data!;
@@ -218,7 +228,8 @@ class ListingsPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ListingDetailsPage(item: item),
+                              builder: (context) =>
+                                  ListingDetailsPage(item: item),
                             ),
                           );
                         },
@@ -241,7 +252,10 @@ class ListingsPage extends StatelessWidget {
                                     gradient: LinearGradient(
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
-                                      colors: [Color(0xFFD33333), Color(0xFFF63B3B)],
+                                      colors: [
+                                        Color(0xFFD33333),
+                                        Color(0xFFF63B3B)
+                                      ],
                                     ),
                                   ),
                                   child: ClipRRect(
@@ -262,12 +276,14 @@ class ListingsPage extends StatelessWidget {
                                 ),
                                 SizedBox(height: 4),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       children: [
                                         CircleAvatar(
-                                          backgroundImage: NetworkImage(user['profileImageUrl']),
+                                          backgroundImage: NetworkImage(
+                                              user['profileImageUrl']),
                                           radius: 12,
                                         ),
                                         SizedBox(width: 8),
@@ -281,7 +297,8 @@ class ListingsPage extends StatelessWidget {
                                     ),
                                     Row(
                                       children: [
-                                        Icon(Icons.star, color: Colors.red, size: 16),
+                                        Icon(Icons.star,
+                                            color: Colors.red, size: 16),
                                         Text(user['rating'].toString()),
                                       ],
                                     ),

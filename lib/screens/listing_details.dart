@@ -9,7 +9,8 @@ class ListingDetailsPage extends StatelessWidget {
   const ListingDetailsPage({Key? key, required this.item}) : super(key: key);
 
   Future<Map<String, dynamic>> getUserInfo(String userId) async {
-    var userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    var userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
     return userDoc.data() as Map<String, dynamic>;
   }
 
@@ -17,13 +18,13 @@ class ListingDetailsPage extends StatelessWidget {
     String currentUserId = FirebaseAuth.instance.currentUser!.uid;
     QuerySnapshot chatSnapshot = await FirebaseFirestore.instance
         .collection('chats')
-        .where('users', arrayContains: [currentUserId, userId])
-        .get();
+        .where('users', arrayContains: [currentUserId, userId]).get();
 
     if (chatSnapshot.docs.isNotEmpty) {
       return chatSnapshot.docs.first.id;
     } else {
-      DocumentReference newChat = await FirebaseFirestore.instance.collection('chats').add({
+      DocumentReference newChat =
+          await FirebaseFirestore.instance.collection('chats').add({
         'users': [currentUserId, userId],
         'createdAt': Timestamp.now(),
       });
@@ -33,9 +34,11 @@ class ListingDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String imageUrl = item['imageUrl'] ?? 'https://via.placeholder.com/150';
+    final String imageUrl =
+        item['imageUrl'] ?? 'https://via.placeholder.com/150';
     final String title = item['title'] ?? 'No title';
-    final String description = item['description'] ?? 'No description available';
+    final String description =
+        item['description'] ?? 'No description available';
     final String userId = item['userId'] ?? '';
 
     return Scaffold(
@@ -60,9 +63,12 @@ class ListingDetailsPage extends StatelessWidget {
           }
 
           var user = userSnapshot.data ?? {};
-          final String userImage = user['profileImageUrl'] ?? 'https://via.placeholder.com/50';
+          final String userImage =
+              user['profileImageUrl'] ?? 'https://via.placeholder.com/50';
           final String userName = user['fullName'] ?? 'Unknown';
-          final double rating = (user['rating'] is int) ? (user['rating'] as int).toDouble() : (user['rating'] as double? ?? 0.0);
+          final double rating = (user['rating'] is int)
+              ? (user['rating'] as int).toDouble()
+              : (user['rating'] as double? ?? 0.0);
 
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -132,13 +138,15 @@ class ListingDetailsPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ChatConversationPage(chatId: chatId, chatUserId: userId),
+                        builder: (context) => ChatConversationPage(
+                            chatId: chatId, chatUserId: userId),
                       ),
                     );
                   },
                   child: Text('Message User'),
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, backgroundColor: Color(0xFFD33333),
+                    foregroundColor: Colors.white,
+                    backgroundColor: Color(0xFFD33333),
                   ),
                 ),
               ],
