@@ -15,9 +15,53 @@ class _ChatConversationPageState extends State<ChatConversationPage> {
   final TextEditingController _messageController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool _isVerified = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUserVerification();
+  }
+
+  Future<void> _checkUserVerification() async {
+    var currentUser = _auth.currentUser!;
+    var userDoc = await _firestore.collection('users').doc(currentUser.uid).get();
+    if (userDoc.exists && userDoc['verified'] == true) {
+      setState(() {
+        _isVerified = true;
+      });
+    } else {
+      _showVerificationAlert();
+    }
+  }
+
+  void _showVerificationAlert() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,  // This makes sure the dialog cannot be dismissed by tapping outside
+      builder: (context) {
+        return WillPopScope(  // Prevent the back button from closing the dialog
+          onWillPop: () async => false,
+          child: AlertDialog(
+            title: Text('Account Not Verified'),
+            content: Text('Please verify your account to access this feature.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(); // Go back to the previous screen
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   void _sendMessage() async {
-    if (_messageController.text.isEmpty) return;
+    if (_messageController.text.isEmpty || !_isVerified) return;
 
     var message = _messageController.text.trim();
     var currentUser = _auth.currentUser!;

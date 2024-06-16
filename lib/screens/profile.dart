@@ -24,7 +24,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _fetchUserData() async {
     if (_user != null) {
-      DocumentSnapshot userDoc = await _firestore.collection('users').doc(_user!.uid).get();
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(_user!.uid).get();
       setState(() {
         _userData = userDoc.data() as Map<String, dynamic>?;
       });
@@ -38,7 +39,10 @@ class _ProfilePageState extends State<ProfilePage> {
       setState(() {
         _userData!['profileImageUrl'] = image.path;
       });
-      _firestore.collection('users').doc(_user!.uid).update({'profileImageUrl': image.path});
+      _firestore
+          .collection('users')
+          .doc(_user!.uid)
+          .update({'profileImageUrl': image.path});
     }
   }
 
@@ -88,7 +92,10 @@ class _ProfilePageState extends State<ProfilePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AccountVerificationPage()),
+                  MaterialPageRoute(
+                      builder: (context) => AccountVerificationPage(
+                            email: _userData!['email'],
+                          )),
                 );
               },
             ),

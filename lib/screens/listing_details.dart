@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'chat_conversation.dart';
+import 'otherprofile.dart'; // Import the otherprofile.dart file
 
 class ListingDetailsPage extends StatelessWidget {
   final Map<String, dynamic> item;
@@ -102,20 +103,30 @@ class ListingDetailsPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(userImage),
-                          radius: 20,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          userName,
-                          style: TextStyle(
-                            fontStyle: FontStyle.italic,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OtherProfilePage(userId: userId),
                           ),
-                        ),
-                      ],
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(userImage),
+                            radius: 20,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            userName,
+                            style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     Row(
                       children: [

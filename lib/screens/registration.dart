@@ -21,6 +21,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String userType = 'Donator';
   File? _profileImage;
 
+  // Default profile picture URL
+  final String _defaultProfileImageUrl = 'https://firebasestorage.googleapis.com/v0/b/generalms-b6a03.appspot.com/o/profile_images%2Fplaceholdergeneralmspic.jpg?alt=media&token=83aba2bc-dde4-4b74-8b5f-870bafac5b69';
+
   Future<void> _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
@@ -30,8 +33,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
     });
   }
 
-  Future<String?> _uploadProfileImage(String userId) async {
-    if (_profileImage == null) return null;
+  Future<String> _uploadProfileImage(String userId) async {
+    if (_profileImage == null) return _defaultProfileImageUrl;
     final storageRef = FirebaseStorage.instance.ref().child('profilePictures/$userId');
     await storageRef.putFile(_profileImage!);
     return await storageRef.getDownloadURL();
@@ -60,7 +63,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         'phone': phoneController.text,
         'userType': userType,
         'profileImageUrl': profileImageUrl,
-        if (userType == 'Donator') 'rating': null,
+        'verified': false, // Set 'verified' field to false
+        if (userType == 'Donator') 'rating': 0,
       });
 
       Navigator.pop(context);
@@ -89,7 +93,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               child: CircleAvatar(
                 radius: 50,
                 backgroundColor: Colors.grey[200],
-                backgroundImage: _profileImage != null ? FileImage(_profileImage!) : null,
+                backgroundImage: _profileImage != null ? FileImage(_profileImage!) : NetworkImage(_defaultProfileImageUrl) as ImageProvider<Object>?,
                 child: _profileImage == null ? const Icon(Icons.camera_alt, size: 50, color: Colors.grey) : null,
               ),
             ),

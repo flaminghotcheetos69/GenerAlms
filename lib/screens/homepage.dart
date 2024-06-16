@@ -21,6 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   bool _isDonator = false;
+  bool _isVerified = false;
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage> {
     if (userDoc.exists) {
       setState(() {
         _isDonator = userDoc['userType'] == 'Donator';
+        _isVerified = userDoc['verified'] == true;
       });
     }
   }
@@ -59,6 +61,26 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _showVerificationAlert() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Account Not Verified'),
+          content: Text('Please verify your account to access this feature.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,12 +95,16 @@ class _HomePageState extends State<HomePage> {
                 FloatingActionButton(
                   heroTag: 'createListing',
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddDonationProductPage(user: widget.user),
-                      ),
-                    );
+                    if (_isVerified) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddDonationProductPage(user: widget.user),
+                        ),
+                      );
+                    } else {
+                      _showVerificationAlert();
+                    }
                   },
                   child: Icon(Icons.add),
                   backgroundColor: Colors.red,
@@ -87,12 +113,16 @@ class _HomePageState extends State<HomePage> {
                 FloatingActionButton(
                   heroTag: 'currentListings',
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DonationHistoryPage(user: widget.user),
-                      ),
-                    );
+                    if (_isVerified) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DonationHistoryPage(user: widget.user),
+                        ),
+                      );
+                    } else {
+                      _showVerificationAlert();
+                    }
                   },
                   child: Icon(Icons.history),
                   backgroundColor: Colors.red,
@@ -155,7 +185,14 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class ListingsPage extends StatelessWidget {
+class ListingsPage extends StatefulWidget {
+  @override
+  _ListingsPageState createState() => _ListingsPageState();
+}
+
+class _ListingsPageState extends State<ListingsPage> {
+  String _searchQuery = '';
+
   Future<Map<String, dynamic>> getUserInfo(String userId) async {
     var userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
     return userDoc.data() as Map<String, dynamic>;
@@ -168,6 +205,11 @@ class ListingsPage extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = value.toLowerCase();
+              });
+            },
             decoration: InputDecoration(
               hintText: 'Search',
               hintStyle: TextStyle(color: Colors.red),
@@ -194,6 +236,12 @@ class ListingsPage extends StatelessWidget {
               }
 
               List<DocumentSnapshot> items = snapshot.data!.docs;
+
+              // Filter items based on search query
+              items = items.where((item) {
+                var itemData = item.data() as Map<String, dynamic>;
+                return itemData['title'].toString().toLowerCase().contains(_searchQuery);
+              }).toList();
 
               return ListView.builder(
                 itemCount: items.length,
@@ -289,6 +337,8 @@ class ListingsPage extends StatelessWidget {
                                 ),
                               ],
                             ),
+                         
+
                           ),
                         ),
                       );

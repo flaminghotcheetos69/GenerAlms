@@ -144,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                       if (userType == 'Admin') {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => AdminDashboardPage()), // Using AdminDashboardPage
+                          MaterialPageRoute(builder: (context) => AdminDBScreen()), // Using AdminDashboardPage
                         );
                       } else {
                         Navigator.pushReplacement(

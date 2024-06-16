@@ -25,7 +25,7 @@ class _AddDonationProductPageState extends State<AddDonationProductPage> {
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _image = File(pickedFile.path); // Corrected the typo here
+        _image = File(pickedFile.path);
       });
     }
   }
@@ -71,37 +71,79 @@ class _AddDonationProductPageState extends State<AddDonationProductPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Donation Product'),
+        backgroundColor: Colors.red, // Set the background color of the AppBar
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextField(
                 controller: _titleController,
-                decoration: InputDecoration(labelText: 'Title'),
+                decoration: InputDecoration(
+                  labelText: 'Title',
+                  border: OutlineInputBorder(),
+                ),
               ),
+              SizedBox(height: 16),
               TextField(
                 controller: _descriptionController,
-                decoration: InputDecoration(labelText: 'Description'),
+                maxLines: 4,
+                decoration: InputDecoration(
+                  labelText: 'Description',
+                  border: OutlineInputBorder(),
+                ),
               ),
               SizedBox(height: 20),
               _image == null
-                  ? Text('No image selected.')
-                  : ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxHeight: 200, // Adjust as needed
-                      ),
-                      child: Image.file(_image!),
+                  ? Center(child: Text('No image selected.'))
+                  : Stack(
+                      alignment: AlignmentDirectional.bottomEnd,
+                      children: [
+                        Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            image: DecorationImage(
+                              image: FileImage(_image!),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: _pickImage,
+                          icon: Icon(Icons.edit, color: Colors.white),
+                        ),
+                      ],
                     ),
+              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _pickImage,
                 child: Text('Pick Image'),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  textStyle: TextStyle(fontSize: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _addProduct,
                 child: Text('Add Product'),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  textStyle: TextStyle(fontSize: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
               ),
             ],
           ),
