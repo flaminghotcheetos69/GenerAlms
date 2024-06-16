@@ -22,7 +22,6 @@ class AdminDashboardPage extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 16.0),
-            // Bar Chart Label
             const Text(
               'Users on Platform Over Time',
               style: TextStyle(
@@ -31,9 +30,8 @@ class AdminDashboardPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-            // Bar Chart
             SizedBox(
-              height: 300, // Decreased the height
+              height: 300,
               child: charts.BarChart(
                 _createSampleBarData(),
                 animate: true,
@@ -45,11 +43,11 @@ class AdminDashboardPage extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.build),
+            label: 'Admin Extensions',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.transparent), // Invisible dummy item
+            icon: Icon(Icons.person, color: Colors.transparent), // Invisible button because apparently the system breaks with only 1 button??? Dramatic
             label: '',
           ),
         ],
@@ -66,7 +64,7 @@ class AdminDashboardPage extends StatelessWidget {
     );
   }
 
-  // Sample data for Bar Chart
+  // Sample data for Bar Chart. Add to firebase database
   List<charts.Series<ChartData, String>> _createSampleBarData() {
     final data = [
       ChartData('January', 50),

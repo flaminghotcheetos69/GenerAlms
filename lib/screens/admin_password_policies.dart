@@ -1,22 +1,33 @@
 import 'package:flutter/material.dart';
+import 'admin_user_settings.dart'; 
 
 class PasswordPolicies extends StatelessWidget {
-  PasswordPolicies({super.key});
+  const PasswordPolicies({super.key});
   
    @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Verification Setting'),
+        title: const Text('Password Policies'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const AdminSettingsScreen()),
+            );
           },
         ),
       ),
       body: Center(
-        child: Text('Verification Screen Content Goes Here'),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: const Text(
+            'Password should be no less than 6 characters and any changes to password must be made from Firebase',
+            style: TextStyle(fontSize: 16.0),
+            textAlign: TextAlign.center,
+          ),
+        ),
       ),
     );
   }

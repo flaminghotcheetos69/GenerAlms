@@ -25,7 +25,7 @@ class _AddDonationProductPageState extends State<AddDonationProductPage> {
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _image = File(pickedFile.path); // Corrected the typo here
+        _image = File(pickedFile.path); 
       });
     }
   }
@@ -56,7 +56,7 @@ class _AddDonationProductPageState extends State<AddDonationProductPage> {
       'user': widget.user.email,
       'userId': widget.user.uid,
       'userImage':
-          'https://example.com/userImage.png', // Replace with actual user image if available
+          'https://example.com/userImage.png', 
       'rating': 0.0,
       'approved': false,
     });
@@ -90,7 +90,7 @@ class _AddDonationProductPageState extends State<AddDonationProductPage> {
                   ? Text('No image selected.')
                   : ConstrainedBox(
                       constraints: BoxConstraints(
-                        maxHeight: 200, // Adjust as needed
+                        maxHeight: 200, 
                       ),
                       child: Image.file(_image!),
                     ),

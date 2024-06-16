@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:generalms/screens/admin_comms.dart';
 import 'package:generalms/screens/admin_user_settings.dart';
 import 'adminHP.dart'; 
 
@@ -31,6 +32,12 @@ class HomePage extends StatelessWidget {
           ),
           ListTile(
             title: Text('Communication Hub'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AdminCommsScreen()),
+              );
+            },
           ),
           ListTile(
             title: Text('Security and Privacy Settings'),
@@ -40,12 +47,6 @@ class HomePage extends StatelessWidget {
           ),
           ListTile(
             title: Text('Backup and Recovery Settings'),
-          ),
-          ListTile(
-            title: Text('Integration Setting'),
-          ),
-          ListTile(
-            title: Text('Customization Setting'),
           ),
          ],
       ),
@@ -64,10 +65,8 @@ class HomePage extends StatelessWidget {
         onTap: (index) {
          switch (index) {
             case 0:
-              // Handle Profile button press
               break;
             case 1:
-              // Navigate to Admin Dashboard Page
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const AdminDashboardPage()),
