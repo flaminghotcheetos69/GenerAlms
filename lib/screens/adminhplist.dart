@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:generalms/screens/admin_user_settings.dart';
 import 'adminHP.dart'; 
-
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -18,10 +18,16 @@ class HomePage extends StatelessWidget {
         ),
       ),  
       body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: const [
+        padding:  EdgeInsets.all(16.0),
+        children:  [
           ListTile(
             title: Text('Admin User Setting'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AdminSettingsScreen()),
+              );
+            },
           ),
           ListTile(
             title: Text('Communication Hub'),
@@ -41,10 +47,7 @@ class HomePage extends StatelessWidget {
           ListTile(
             title: Text('Customization Setting'),
           ),
-          ListTile(
-            title: Text('Verification Setting'),
-          ),
-        ],
+         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
